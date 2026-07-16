@@ -11,9 +11,8 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700&display=swap" rel="stylesheet" />
 
-    <!-- BỘ CSS THUỒN GIA CỐ - ÉP BUỘC GIAO DIỆN CHUẨN TRONG MỌI TRƯỜNG HỢP -->
+    <!-- BỘ CSS GIA CỐ: KHUNG VUÔNG LIQUID & TEXTBOX KÍNH THỰC TẾ -->
     <style>
-        /* Căn giữa toàn bộ trang web */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -26,115 +25,149 @@
             font-family: 'Figtree', sans-serif;
         }
         
-        /* Nền chuyển màu Liquid Gradient */
+        /* Nền không gian Liquid */
         .liquid-container {
             width: 100%;
             min-height: 100vh;
             display: flex;
-            justify-content: center; /* Căn giữa ngang */
-            align-items: center;     /* Căn giữa dọc */
-            background: linear-gradient(135deg, #3a1c71, #d76d77, #ffaf7b);
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #2f2f2f, #636363, #414946);
             padding: 20px;
             position: relative;
+            overflow: hidden;
         }
 
-        /* Định hình cái Box ở chính giữa màn hình */
+        /* Các khối nước mờ ảo bay lơ lửng phía sau */
+        .floating-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.3;
+            mix-blend-mode: screen;
+            animation: floatAnimation 14s ease-in-out infinite alternate;
+        }
+        .orb-1 { width: 400px; height: 400px; background: #00f5d4; top: -80px; left: -80px; }
+        .orb-2 { width: 500px; height: 500px; background: #7209b7; bottom: -120px; right: -60px; animation-delay: -4s; }
+        .orb-3 { width: 300px; height: 300px; background: #ff007f; top: 25px; right: -100px; animation-delay: -8s; }
+
+        @keyframes floatAnimation {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(40px, 30px) scale(1.1); }
+        }
+
+        /* KHUNG VUÔNG BAO QUANH - CÁC CẠNH CHUYỂN ĐỘNG GỢN SÓNG (Liquid Square Frame) */
         .liquid-glass-box {
             width: 100%;
-            max-width: 420px; /* Khống chế chiều rộng chuẩn của hộp */
-            padding: 45px 35px;
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50px 30px 60px 40px; /* Bo góc dạng giọt nước */
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
-            transition: all 0.5s ease-in-out;
+            max-width: 485px;
+            padding: 55px 45px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(35px);
+            -webkit-backdrop-filter: blur(35px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            box-shadow: 0 30px 70px -15px rgba(0, 0, 0, 0.6);
             z-index: 10;
+            
+            /* Tạo chuyển động gợn sóng chạy dọc theo phom hộp vuông */
+            animation: squareEdgeMorphing 9s ease-in-out infinite;
         }
-        .liquid-glass-box:hover {
-            border-radius: 40px 60px 30px 70px;
+
+        /* Thuật toán tạo độ lồi lõm chuyển động nhẹ trên 4 cạnh vuông */
+        @keyframes squareEdgeMorphing {
+            0% {
+                border-radius: 24px 45px 30px 50px / 45px 30px 50px 24px;
+            }
+            33% {
+                border-radius: 40px 24px 55px 35px / 28px 48px 24px 50px;
+            }
+            66% {
+                border-radius: 24px 50px 30px 45px / 50px 24px 45px 35px;
+            }
+            100% {
+                border-radius: 24px 45px 30px 50px / 45px 30px 50px 24px;
+            }
         }
 
         /* Tiêu đề */
         .form-header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 38px;
         }
         .form-header h2 {
             color: #ffffff;
-            font-size: 28px;
+            font-size: 30px;
             font-weight: 800;
-            margin-bottom: 8px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.15);
+            margin-bottom: 10px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
         }
         .form-header p {
-            color: rgba(255, 255, 255, 0.85);
-            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14.5px;
             font-weight: 500;
         }
 
-        /* Khung chứa các ô nhập liệu */
+        /* Khung chứa nhập liệu */
         .form-group {
             width: 100%;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
             display: flex;
             flex-direction: column;
         }
         .form-group label {
-            color: #ffffff;
+            color: rgba(255, 255, 255, 0.85);
             font-size: 14px;
             font-weight: 600;
-            margin-left: 18px;
-            margin-bottom: 6px;
+            margin-left: 14px;
+            margin-bottom: 8px;
         }
 
-        /* Định dạng Textbox căn đều 2 cạnh, bo tròn giọt nước */
+        /* TEXTBOX PHONG CÁCH KÍNH (Glassmorphic Inputs) - CĂN ĐỀU CẠNH BÊN */
         .liquid-textbox {
-            width: 100%; /* Căn đều khít 2 cạnh của Box */
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.25);
+            width: 100%; /* Giãn khít 2 bên cạnh box */
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             color: #ffffff;
-            border-radius: 9999px;
-            padding: 14px 24px;
-            font-size: 15px;
+            border-radius: 16px; /* Dáng vuông bo góc đồng bộ */
+            padding: 16px 20px;
+            font-size: 15.5px;
             outline: none;
             transition: all 0.3s ease;
-            text-align: center; /* Đưa chữ và placeholder vào chính giữa ô nhập liệu */
+            box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.05), 0 4px 15px rgba(0, 0, 0, 0.1);
         }
         .liquid-textbox::placeholder {
-            color: rgba(255, 255, 255, 0.4);
+            color: rgba(255, 255, 255, 0.35);
         }
         .liquid-textbox:focus {
-            background: rgba(255, 255, 255, 0.18);
-            border-color: rgba(255, 255, 255, 0.6);
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(0, 245, 212, 0.6);
+            box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.05), 0 0 15px rgba(0, 245, 212, 0.25);
         }
 
-        /* Hàng Ghi nhớ & Quên mật khẩu */
+        /* Tùy chọn hàng phụ */
         .form-options {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: 5px;
-            margin-bottom: 25px;
-            padding: 0 10px;
+            margin-bottom: 28px;
+            padding: 0 6px;
         }
         .form-options label {
             display: flex;
             align-items: center;
-            color: #ffffff;
-            font-size: 13.5px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
             font-weight: 500;
             cursor: pointer;
         }
         .form-options input[type="checkbox"] {
             margin-right: 8px;
-            accent-color: #00b4d8;
+            accent-color: #00f5d4;
         }
         .form-options a {
-            color: #a5f3fc;
-            font-size: 13.5px;
+            color: #00f5d4;
+            font-size: 14px;
             font-weight: 600;
             text-decoration: none;
             transition: color 0.2s;
@@ -144,41 +177,63 @@
             text-decoration: underline;
         }
 
-        /* Nút đăng nhập chất lỏng phát sáng */
-        .liquid-btn {
+        /* NÚT BẤM RAINBOW WAVE GLOW VÀNG ÓNG TÍM LED */
+        .rainbow-btn-wrapper {
+            position: relative;
             width: 100%;
-            background: linear-gradient(90deg, #00b4d8, #0077b6, #7209b7);
+            margin-top: 5px;
+        }
+        .rainbow-glow {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(90deg, #ff0000, #0986b7, #00d81d, #d0f500, #ff0000);
+            background-size: 300% 100%;
+            border-radius: 16px; /* Bo góc tiệp dáng với textbox */
+            filter: blur(15px);
+            opacity: 0.8;
+            z-index: 1;
+            animation: rainbowMovement 4s linear infinite;
+        }
+        .liquid-btn {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            background: linear-gradient(90deg, #ff007f, #7209b7, #00b4d8, #00f5d4, #ff007f);
+            background-size: 300% 100%;
             color: #ffffff;
-            border-radius: 9999px;
-            padding: 15px 24px;
-            font-size: 16px;
+            border-radius: 16px; /* Bo góc tiệp dáng */
+            padding: 16px 24px;
+            font-size: 16.5px;
             font-weight: 700;
+            letter-spacing: 0.5px;
             border: none;
-            box-shadow: 0 0 20px rgba(0, 180, 216, 0.4);
             cursor: pointer;
-            transition: all 0.3s ease;
+            outline: none;
+            transition: transform 0.2s ease;
+            animation: rainbowMovement 4s linear infinite;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
-        .liquid-btn:hover {
-            box-shadow: 0 0 30px rgba(114, 9, 183, 0.6);
-            transform: scale(1.02);
+        
+        @keyframes rainbowMovement {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 300% 0%; }
         }
-        .liquid-btn:active {
-            transform: scale(0.98);
-        }
+        .liquid-btn:hover { transform: scale(1.02); }
+        .liquid-btn:active { transform: scale(0.98); }
 
-        /* Hàng đăng ký tài khoản mới */
+        /* Đăng ký */
         .register-footer {
             text-align: center;
-            margin-top: 25px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            margin-top: 35px;
+            padding-top: 22px;
+            border-top: 1px solid rgba(255, 255, 255, 0.12);
         }
         .register-footer p {
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 13.5px;
+            color: rgba(255, 255, 255, 0.65);
+            font-size: 14px;
         }
         .register-footer a {
-            color: #a5f3fc;
+            color: #00f5d4;
             font-weight: 700;
             text-decoration: none;
         }
@@ -186,24 +241,26 @@
             text-decoration: underline;
         }
 
-        /* Thông báo lỗi */
         .error-msg {
             margin-top: 6px;
-            color: #fca5a5;
-            background: rgba(239, 68, 68, 0.2);
+            color: #ffb3b3;
+            background: rgba(239, 68, 68, 0.25);
             padding: 6px 16px;
-            border-radius: 9999px;
-            font-size: 12px;
+            border-radius: 12px;
+            font-size: 12.5px;
             font-weight: 500;
-            text-align: center;
         }
     </style>
 </head>
 <body>
 
     <div class="liquid-container">
+        <!-- Đèn nền Orbs trang trí -->
+        <div class="floating-orb orb-1"></div>
+        <div class="floating-orb orb-2"></div>
+        <div class="floating-orb orb-3"></div>
         
-        <!-- Khối thẻ Liquid Glass Card độc lập -->
+        <!-- Khung vuông Liquid chuyển động gợn sóng -->
         <div class="liquid-glass-box">
             
             <!-- Header Chào Mừng -->
@@ -214,7 +271,7 @@
 
             <!-- Session Status -->
             @if (session('status'))
-                <div style="margin-bottom: 15px; text-align: center; color: #a5f3fc; background: rgba(255,255,255,0.1); padding: 10px; border-radius: 15px; font-size: 14px;">
+                <div style="margin-bottom: 18px; text-align: center; color: #00f5d4; background: rgba(255,255,255,0.08); padding: 10px; border-radius: 12px; font-size: 14px;">
                     {{ session('status') }}
                 </div>
             @endif
@@ -267,10 +324,13 @@
                     @endif
                 </div>
 
-                <!-- Submit Button -->
-                <button type="submit" class="liquid-btn">
-                    Đăng nhập
-                </button>
+                <!-- Nút bấm hào quang sóng cầu vồng dáng vuông bo góc -->
+                <div class="rainbow-btn-wrapper">
+                    <div class="rainbow-glow"></div>
+                    <button type="submit" class="liquid-btn">
+                        Đăng nhập
+                    </button>
+                </div>
 
                 <!-- Register Link -->
                 @if (Route::has('register'))
@@ -285,4 +345,4 @@
         </div>
     </div>
 </body>
-</html> 
+</html>
